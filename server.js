@@ -5,7 +5,7 @@ var cors = require('cors');
 
 
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyC48nPNoUEt9PuHq3IAOSfUZ-SPjbKksMk',
+  key: 'AIzaSyCm_boaMdggWKCv5MSJPdM3xTnGiuq_5zg',
   Promise: Promise
 });
 
@@ -13,9 +13,9 @@ app.set('port', (process.env.PORT || 5000))
 app.use(express.static(__dirname + '/public'))
 app.use(cors());
 
-setInterval(function() {
-   http.get("http://yao-backend.herokuapp.com");
-   console.log('pinging...');
+setInterval(function () {
+  http.get("http://yao-backend.herokuapp.com");
+  console.log('pinging...');
 }, 18000);
 
 app.get('/', function (request, response) {
@@ -30,11 +30,6 @@ app.get('/map/:lat/:long', (req, res) => {
     .then((response) => {
       const { results } = response.json;
       res.send(results);
-      results.map((result) => {
-        ids.push(result.place_id);
-      })
-      // res.send(ids);
-      // getPlaces(ids);
     })
     .catch((err) => {
       console.log(err);
