@@ -63,6 +63,10 @@ app.get('/search/:search', (req, res) => {
     });
 })
 
+app.get('/places/:lat/:long', (req, res) => {
+  res.send(`Lat: ${req.params.lat} Long ${req.params.long}`)
+})
+
 app.listen(app.get('port'), function () {
   console.log("Node app is running at localhost:" + app.get('port'))
 })
