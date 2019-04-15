@@ -27,7 +27,7 @@ app.get('/', function (request, response) {
 app.get('/map/:lat/:long', (req, res) => {
   let ids = [];
   let places = [];
-  googleMapsClient.placesNearby({ "location": [req.params.lat, req.params.long], "radius": 1800, "type": "cafe, bar" })
+  googleMapsClient.placesNearby({ "location": [req.params.lat, req.params.long], "radius": 1800, "type": "cafe" })
     .asPromise()
     .then((response) => {
       const { results } = response.json;
