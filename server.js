@@ -100,8 +100,8 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
       },${req.params.long}`
     )
     .then(respsonse => {
-      console.log(respsonse.data.response.venues);
-      res.send(respsonse.data.respsonse.groups[0].items);
+      console.log(respsonse.data.response.groups[0].items);
+      res.send(respsonse.data.response.groups[0].items);
     })
     .catch(err => {
       res.send(err);
