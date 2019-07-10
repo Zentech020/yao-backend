@@ -109,17 +109,19 @@ app.get('/spottedbylocals', (req, res) => {
       // always executed
     });
 });
-var placeData = [];
 app.get('/foursqaure/places/:lat/:long', (req, res) => {
+  //get places from foursqaure based on location
   axios
     .get(
       `https://api.foursquare.com/v2/venues/explore?client_id=1DHVNT5QG4YE1OLDDST3IXTWZWZ5WSZ1VOCDZBXLEFLQWXER&client_secret=CE4JOEELFV4HZ1TWWUSSFZQXNGHJNCOGMM2SPCAE14E5YWPV&v=20190911&section=food&intent=checkin&radius=200&ll=${
         req.params.lat
       },${req.params.long}`
     )
-    .then(respsonse => {
+    .then(async respsonse => {
       // res.send(respsonse.data.response.groups[0].items);
       const { items } = respsonse.data.response.groups[0];
+
+      //Grab name and location
       let f_places = items.map(item => {
         return {
           name: item.venue.name,
@@ -127,9 +129,9 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
         };
       });
       let count = f_places.length;
+      var placeData = [];
+      //Loop through the places and add image to designated place
       f_places.forEach(element => {
-        console.log(count);
-        count -= 1;
         googleMapsClient
           .placesNearby({
             location: element.location,
@@ -143,17 +145,20 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
               info: element,
               image: results[0] ? results[0].photos[0].photo_reference : null
             };
+            //push everything together in array
             placeData.push(newPlaceData);
-
-            if (count == 0) {
-              console.log(placeData);
-            }
+            console.log(placeData);
           })
           .catch(err => {
             console.log(err);
           });
       });
-      res.send(placeData);
+      //send array with place and image attached to enpoint
+      await res.send(placeData);
+      await console.log(
+        '------------------------------------------------------------',
+        placeData
+      );
     })
 
     .catch(err => {
