@@ -117,7 +117,7 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
         req.params.lat
       },${req.params.long}`
     )
-    .then(async respsonse => {
+    .then(respsonse => {
       // res.send(respsonse.data.response.groups[0].items);
       const { items } = respsonse.data.response.groups[0];
 
@@ -129,10 +129,11 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
         };
       });
       let count = f_places.length;
-      var placeData = [];
       //Loop through the places and add image to designated place
-      f_places.forEach(element => {
-        googleMapsClient
+      // the async keyword indicates that this map returns Promises
+      const placedataPromises = f_places.map(element => {
+        // let newPlaceData = undefined;
+        return googleMapsClient
           .placesNearby({
             location: element.location,
             radius: 100,
@@ -141,24 +142,28 @@ app.get('/foursqaure/places/:lat/:long', (req, res) => {
           .asPromise()
           .then(response => {
             const { results, status } = response.json;
-            var newPlaceData = {
+            const newPlaceData = {
               info: element,
               image: results[0] ? results[0].photos[0].photo_reference : null
             };
             //push everything together in array
-            placeData.push(newPlaceData);
-            console.log(placeData);
+            // console.log('data:', newPlaceData);
+            return newPlaceData;
           })
           .catch(err => {
             console.log(err);
           });
       });
-      //send array with place and image attached to enpoint
-      await res.send(placeData);
-      await console.log(
-        '------------------------------------------------------------',
-        placeData
-      );
+
+      Promise.all(placedataPromises).then((completed) => {
+        console.log(
+          '------------------------------------------------------------\n',
+          completed
+        );
+        
+        //send array with place and image attached to enpoint
+        res.send(completed);
+        });
     })
 
     .catch(err => {
