@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@google/maps": "^0.5.5",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "circular-json": "^0.5.9",
     "cors": "^2.8.5",
     "express": "^4.16.4",
